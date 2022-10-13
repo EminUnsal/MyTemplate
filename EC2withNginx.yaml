@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+  This template launches an EC2 with Nginx by Userdata
+  
+Resources:
+  LogicalID:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-026b57f3c383c2eec
+      InstanceType: t2.micro
+      KeyName: First_Key # use your own key without.pem
+      SecurityGroups:
+        - SSH-HTTP for EC2
+      Tags:
+        - Key: Name
+          Value: Ec2-Template
+      UserData:
+        Fn::Base64: |
+          #! /bin/bash
+          yum update -y
+          amazon-linux-extras install nginx1
+          systemctl start nginx
+          cd /usr/share/nginx/html
+          chmod -R 777 /usr/share/nginx/html  # or chmod 777 index.hmtl 
+          # This isnt best practice
+          rm index.html
+          # wget <Pull your files index.hmtl>
+          wget https://raw.githubusercontent.com/awsdevopsteam/route-53/master/index.html
+          wget https://raw.githubusercontent.com/awsdevopsteam/route-53/master/ken.jpg
+          systemctl restart nginx
+          systemctl enable ngnix
