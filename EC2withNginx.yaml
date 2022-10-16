@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: |
-  This template launches an EC2 with Nginx by Userdata
+  This template launches an EC2 with Nginx Web Server
   
 Resources:
   LogicalID:

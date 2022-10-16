@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: |
-  
+  This template launches a EC2 instance by LaunchTemplate
 Resources:
   LogicalID:
     Type: AWS::EC2::Instance
