@@ -1,10 +1,19 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: |
   My Template creates AutoScaling behind an LoadBalancer
+
 Parameters:
+  VPC:
+    Description: Select your VPC.
+    Type: AWS::EC2::VPC::Id
+  
+  Subnet:
+    Description: Select at least two subnets. 
+    Type: List<AWS::EC2::Subnet::Id>
 
   MyInstanceType:
     Description: Select your instance type for Lauch Template
+    Type: String
     Default: t2.micro
     AllowedValues:
       - t2.micro
@@ -12,12 +21,25 @@ Parameters:
       - t2.nano
       - t3.nano
 
-
   Anahtar:
     Description: Select your key pair
     Type: AWS::EC2::KeyPair::KeyName 
 
+Mappings:
+  RegionImageMap:
+  us-east-1:
+    AMI: ami-09d3b3274b6c5d4aa
+  us-east-2:
+    AMI: ami-0233c2d874b811deb
+  us-west-1:
+    AMI: ami-0ed05376b59b90e46
+  us-west-2:
+    AMI: ami-0dc8f589abe99f538
+  eu-west-1:
+    AMI: ami-058b1b7fe545997ae  
+
 Resources:
+
   MySecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -30,18 +52,21 @@ Resources:
         - IpProtocol: tcp
           FromPort: 22
           ToPort: 22
-          CidrIp: 0.0.0.0/0
-      VpcId: "String" # I will add later
+          CidrIp: 0.0.0.0/0      
       
   MyLaunchTemplate:
     Type: AWS::EC2::LaunchTemplate
     Properties:
+      LaunchTemplateName: MyLaunchTemplateForLoadBalancer
       LaunchTemplateData:
-        ImageId: ami-09d3b3274b6c5d4aa
+        ImageId: !FindInMap
+          - RegionImageMap
+          - !Ref 'AWS::Region'
+          - AMI
         InstanceType: !Ref MyInstanceType
         KeyName: !Ref Anahtar
         SecurityGroupIds:
-          - !GetAtt MySecurityGroup
+          - !GetAtt MySecurityGroup.GroupId  # MySecurityGroup.VpcId de elde edebilirim
         UserData: !Base64 |
           #! /bin/bash
           yum update -y
@@ -65,6 +90,15 @@ Resources:
           </html>" > /var/www/html/index.html
           systemctl start httpd
           systemctl enable httpd
+ 
+  TargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckIntervalSeconds: 10
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 5
+      Port: 80
+      Protocol: HTTP
+      UnhealthyThresholdCount: 3
+      VpcId: "String"
 
-  
-Outputs:
