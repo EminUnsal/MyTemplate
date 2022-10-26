@@ -17,15 +17,7 @@ Parameters:
     Description: Select your key pair
     Type: AWS::EC2::KeyPair::KeyName 
 
-
-Metadata:
-  
-Mappings:
-  
-Conditions:
-  
 Resources:
-
   MySecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
