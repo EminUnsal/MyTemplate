@@ -3,7 +3,7 @@ Description: |
   This template launches an EC2 with a security group that enables SSH.
 
 Resources:
-  MyServer:
+  MyInstance:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: ami-026b57f3c383c2eec
