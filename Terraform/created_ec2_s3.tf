@@ -34,6 +34,6 @@ resource "aws_instance" "first" {
   }
 }
 resource "aws_s3_bucket" "first" {
-  bucket = "mybucket-by-terraform"
+    bucket = "mybucket-by-terraform"
   # force_destroy = true    bucket dolu olsa bile silebiliriz
 }
