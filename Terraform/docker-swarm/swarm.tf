@@ -145,7 +145,7 @@ resource "aws_instance" "docker-machine-workers" {
 }
 
 variable "sg-ports" {
-  default = [80, 22, 2377, 8080]
+  default = [80, 22, 2377, 8080]   # FOR INGRESS ROUTING MESH TCP-7946 UDP-7946 UDP-4789
 }
 
 resource "aws_security_group" "tf-docker-sec-gr" {
