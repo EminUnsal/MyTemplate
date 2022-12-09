@@ -23,7 +23,7 @@ variable "instance-type" {
 }
 
 variable "key-name" {
-  default = "xxxxxxxx"
+  default = "First_Key"
 }
 
 resource "aws_security_group" "allow_ssh" {
@@ -55,9 +55,8 @@ resource "aws_instance" "tf-ec2" {
   instance_type          = var.instance-type
   key_name               = var.key-name
   vpc_security_group_ids = [aws_security_group.allow_ssh.id]
-  iam_instance_profile   = "terraform"
   tags = {
-    Name = "Docker-engine-josh"
+    Name = "Docker-engine-mehmet"
   }
 
   user_data = <<-EOF
@@ -79,5 +78,5 @@ output "public-ip-address" {
 }
 
 output "ssh-connect-command" {
-  value = "ssh -i ~/.ssh/${var.key-name}.pem ec2-user@${aws_instance.tf-ec2.public_ip}"
+  value = "ssh -i /c/.ssh/${var.key-name}.pem ec2-user@${aws_instance.tf-ec2.public_ip}"
 }
